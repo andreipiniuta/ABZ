@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="356.0" prefWidth="377.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.showProductController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="487.0" minWidth="10.0" prefWidth="409.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="302.0" minWidth="10.0" prefWidth="191.0" />
+  </columnConstraints>
+  <rowConstraints>
+      <RowConstraints maxHeight="95.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="150.0" minHeight="10.0" prefHeight="41.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="187.0" minHeight="10.0" prefHeight="57.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="219.0" minHeight="10.0" prefHeight="219.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <Button mnemonicParsing="false" onAction="#showAllProducts" text="show all products" />
+      <Button mnemonicParsing="false" onAction="#showProductByID" text="show product by ID" GridPane.rowIndex="1" />
+      <Button mnemonicParsing="false" onAction="#close" text="close" GridPane.rowIndex="2" />
+      <TableView fx:id="TViewProduct" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="3">
+        <columns>
+          <TableColumn prefWidth="75.0" text="product">
+              <cellValueFactory>
+                  <PropertyValueFactory property="productName" />
+              </cellValueFactory>
+            </TableColumn>
+          <TableColumn prefWidth="75.0" text="address">
+              <cellValueFactory>
+                  <PropertyValueFactory property="constructionAddress" />
+              </cellValueFactory>
+          </TableColumn>
+            <TableColumn prefWidth="75.0" text="amount">
+                <cellValueFactory>
+                    <PropertyValueFactory property="productAmount" />
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn prefWidth="75.0" text="ID">
+                <cellValueFactory>
+                    <PropertyValueFactory property="ID" />
+                </cellValueFactory>
+            </TableColumn>
+        </columns>
+      </TableView>
+      <Label prefHeight="21.0" prefWidth="79.0" text="   ID field" GridPane.columnIndex="1" />
+      <TextField fx:id="winID" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+   </children>
+</GridPane>

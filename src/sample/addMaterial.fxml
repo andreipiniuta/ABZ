@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<?import javafx.collections.FXCollections?>
+<?import sample.MaterialName?>
+<?import sample.ProviderName?>
+
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="474.0" prefWidth="666.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.AddMaterialController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <Button mnemonicParsing="false" onAction="#addMaterial" prefHeight="31.0" prefWidth="166.0" text="Add material" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+       <Button mnemonicParsing="false" onAction="#closeButton" prefHeight="31.0" prefWidth="166.0" text="Close" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+      <Label prefHeight="21.0" prefWidth="146.0" text="Choose material" />
+      <Label prefHeight="21.0" prefWidth="203.0" text="Choose provider of material" GridPane.rowIndex="1" />
+      <Label prefHeight="21.0" prefWidth="150.0" text="Amount of material" GridPane.rowIndex="2" />
+      <Label prefHeight="21.0" prefWidth="190.0" text="Cost per one unit" GridPane.rowIndex="3" />
+      <ComboBox fx:id="nameMaterial" prefWidth="150.0" GridPane.columnIndex="1" >
+       <items>
+           <FXCollections fx:factory="observableArrayList">
+               <MaterialName fx:value="Sand"/>
+               <MaterialName fx:value="Gravel"/>
+               <MaterialName fx:value="Bitum"/>
+           </FXCollections>
+       </items>
+       </ComboBox>
+      <ComboBox fx:id="nameProvider" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+       <items>
+           <FXCollections fx:factory="observableArrayList">
+               <ProviderName fx:value="AkademClub"/>
+               <ProviderName fx:value="Triada"/>
+               <ProviderName fx:value="Pesochay"/>
+               <ProviderName fx:value="GranitKarel"/>
+               <ProviderName fx:value="Mauzer"/>
+               <ProviderName fx:value="Mikashevichi"/>
+               <ProviderName fx:value="ABZMoscow"/>
+               <ProviderName fx:value="ABZTSM"/>
+           </FXCollections>
+       </items>
+       </ComboBox>
+      <TextField fx:id="amountMaterial" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      <TextField fx:id="costMaterial" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+   </children>
+</GridPane>

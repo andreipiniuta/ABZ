@@ -94,7 +94,8 @@ public class MaterialServiceImpl implements MaterialService {
         InputStream is = socket.getInputStream();
         JSONTokener tokener = new JSONTokener(is);
 
-        JSONObject response = (JSONObject) tokener.nextValue();
+        JSONObject response = (JSONObject) tokener.nextValue(); //tokener вернул JSONObject сост из 2х json-ов
+//первый json
         JSONObject headers = response.getJSONObject("headers");
 
         int code = headers.getInt("status-code");
@@ -103,18 +104,36 @@ public class MaterialServiceImpl implements MaterialService {
         System.out.println(code + " - " + message);
 
 //второй json объект-сам бизнесс объект
-        List <Material> allMaterials = new ArrayList<>();
-        JSONArray responseData = response.getJSONArray("response-data");
-        int length = responseData.length();
+//второй json объект значение --массив наших бизнес объектов
+        List <Material> allMaterial = new ArrayList<>();
+        JSONArray responseArray = response.getJSONArray("response-data");//достали массив
+        int length = responseArray.length();
         for (int i = 0; i < length; i++) {
-           Material material = (Material) responseData.get(i);
-           allMaterials.add(material);
+            JSONObject responseObject = responseArray.getJSONObject(i);//при каждом проходе достаем объект из массива
+
+            Integer ID = responseObject.getInt("ID");
+            String materialNameStr = responseObject.getString("materialName");
+            MaterialName materialName = MaterialName.valueOf(materialNameStr);
+            String providerNameStr = responseObject.getString("providerName");
+            ProviderName providerName = ProviderName.valueOf(providerNameStr);
+            double amount = responseObject.getDouble("amount");
+            double costPerOne = responseObject.getDouble("costPerOne");
+
+            Material material = new Material();
+            material.setID(ID);
+            material.setMaterialName(materialName);
+            material.setProviderName(providerName);
+            material.setAmount(amount);
+            material.setCostPerOne(costPerOne);
+            material.getTotalCost();
+
+            allMaterial.add(material);//каждый объект закидываю в лист
         }
 
         writer.close();
         is.close();
         socket.close();
-        return allMaterials;
+        return allMaterial;
     }
 
     @Override
@@ -132,7 +151,12 @@ public class MaterialServiceImpl implements MaterialService {
         jsonWriter.object();
         jsonWriter.key("command-name").value("get-material-by-id");
         jsonWriter.endObject();
-        // второй объекта jsona не нужен
+        // второй объекта jsona отправляем на Server сам ID-шник
+        jsonWriter.key("parameters");
+        jsonWriter.object();
+        jsonWriter.key("ID").value(ID);
+        jsonWriter.endObject();
+
         jsonWriter.endObject();
         writer.flush();
 //получение ответа файла JSON
@@ -142,6 +166,7 @@ public class MaterialServiceImpl implements MaterialService {
         JSONTokener tokener = new JSONTokener(is);
 
         JSONObject response = (JSONObject) tokener.nextValue();
+        //первый json
         JSONObject headers = response.getJSONObject("headers");
 
         int code = headers.getInt("status-code");
@@ -150,29 +175,31 @@ public class MaterialServiceImpl implements MaterialService {
         System.out.println(code + " - " + message);
 
 //второй json объект-сам бизнесс объект
-        JSONObject responseData = response.getJSONObject("response-data");
+        JSONArray responseData = response.getJSONArray("response-data");
         Material material = new Material();
+        int size = responseData.length();
+        for (int i=0; i< size; i++) {
+            JSONObject responseDataJSONObject= responseData.getJSONObject(i);
+            Integer mID = responseDataJSONObject.getInt("ID");
+            String materialNameStr = responseDataJSONObject.getString("materialName");
+            MaterialName materialName = MaterialName.valueOf(materialNameStr);
+            String providerNameStr = responseDataJSONObject.getString("providerName");
+            ProviderName providerName = ProviderName.valueOf(providerNameStr);
+            double amount = responseDataJSONObject.getDouble("amount");
+            double costPerOne = responseDataJSONObject.getDouble("costPerOne");
 
-        Integer mID = responseData.getInt("ID");
-        String materialNameStr = responseData.getString("materialName");
-        MaterialName materialName = MaterialName.valueOf(materialNameStr);
-        String providerNameStr = responseData.getString("providerName");
-        ProviderName providerName = ProviderName.valueOf(providerNameStr);
-        double amount = responseData.getDouble("amount");
-        double costPerOne = responseData.getDouble("costPerOne");
-
-        material.setID(mID);
-        material.setMaterialName(materialName);
-        material.setProviderName(providerName);
-        material.setAmount(amount);
-        material.setCostPerOne(costPerOne);
-        material.getTotalCost();
-
+            material.setID(mID);
+            material.setMaterialName(materialName);
+            material.setProviderName(providerName);
+            material.setAmount(amount);
+            material.setCostPerOne(costPerOne);
+            material.getTotalCost();
+        }
         writer.close();
         is.close();
         socket.close();
         return material;
-}
+    }
 
 
     @Override

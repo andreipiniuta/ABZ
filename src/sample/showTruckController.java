@@ -6,15 +6,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import sample.service.ServiceFactory;
-import sample.service.StaffService;
 import sample.service.TruckService;
-import sample.service.impl.TruckServiceImpl;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
-
-import static java.lang.Integer.parseInt;
 
 public class showTruckController implements Initializable {
     @FXML
@@ -29,7 +26,10 @@ public class showTruckController implements Initializable {
         items.clear();
         ServiceFactory sf = ServiceFactory.getServiceFactory();
         TruckService ts = sf.getTruckService();
-        items.add((Truck) ts.getAllTruck());
+        List<Truck> allTruck = ts.getAllTruck();
+        for (Truck truck:allTruck) {
+            items.add(truck);
+        }
     }
 
     public void showTruckByID () throws IOException {

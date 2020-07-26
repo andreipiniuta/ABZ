@@ -32,7 +32,10 @@ public class showMaterialController implements Initializable {
         items.clear();
         ServiceFactory sf = ServiceFactory.getServiceFactory();
         MaterialService ms = sf.getMaterialService();
-        items.add((Material)ms.getAllMaterial());
+        List <Material> allMaterial = ms.getAllMaterial();
+        for (Material material:allMaterial) {
+            items.add(material);
+        }
     }
 
     public void showByID () throws IOException {

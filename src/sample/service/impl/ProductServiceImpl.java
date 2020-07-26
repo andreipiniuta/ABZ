@@ -92,11 +92,22 @@ public class ProductServiceImpl implements ProductService {
 
 //второй json объект-сам бизнесс объект
         List <Product> allProduct = new ArrayList<>();
-        JSONArray responseData = response.getJSONArray("response-data");
-        int length = responseData.length();
+        JSONArray responseArray = response.getJSONArray("response-data");//достали массив
+        int length = responseArray.length();
         for (int i = 0; i < length; i++) {
-            Product product = (Product) responseData.get(i);
-            allProduct.add(product);
+            JSONObject responseObject = responseArray.getJSONObject(i);//при каждом проходе достаем объект из массива
+
+            Integer ID = responseObject.getInt("ID");
+            String productName = responseObject.getString("productName");
+            double productAmount = responseObject.getDouble("productAmount");
+            String constructionAddress = responseObject.getString("constructionAddress");
+
+            Product product = new Product();
+            product.setID(ID);
+            product.setProductName(productName);
+            product.setProductAmount(productAmount);
+            product.setConstructionAddress(constructionAddress);
+            allProduct.add(product);//каждый объект закидываю в лист
         }
         writer.close();
         is.close();
@@ -119,7 +130,12 @@ public class ProductServiceImpl implements ProductService {
         jsonWriter.object();
         jsonWriter.key("command-name").value("get-product-by-id");
         jsonWriter.endObject();
-        // второй объекта jsona не нужен
+        // второй объекта jsona отправляем на Server сам ID-шник
+        jsonWriter.key("parameters");
+        jsonWriter.object();
+        jsonWriter.key("ID").value(ID);
+        jsonWriter.endObject();
+
         jsonWriter.endObject();
         writer.flush();
 //получение ответа файла JSON
@@ -137,23 +153,27 @@ public class ProductServiceImpl implements ProductService {
         System.out.println(code + " - " + message);
 
 //второй json объект-сам бизнесс объект
-        JSONObject responseData = response.getJSONObject("response-data");
+        JSONArray responseData = response.getJSONArray("response-data");
         Product product = new Product();
 
-        Integer pID = responseData.getInt("ID");
-        String productName = responseData.getString("productName");
-        double productAmount = responseData.getDouble("productAmount");
-        String constructionAddress = responseData.getString("constructionAddress");
+        int size = responseData.length();
+        for (int i=0; i< size; i++) {
+            JSONObject responseDataObject = responseData.getJSONObject(i);
+            Integer pID = responseDataObject.getInt("ID");
+            String productName = responseDataObject.getString("productName");
+            double productAmount = responseDataObject.getDouble("productAmount");
+            String constructionAddress = responseDataObject.getString("constructionAddress");
 
-        product.setID(pID);
-        product.setProductName(productName);
-        product.setProductAmount(productAmount);
-        product.setConstructionAddress(constructionAddress);
+            product.setID(pID);
+            product.setProductName(productName);
+            product.setProductAmount(productAmount);
+            product.setConstructionAddress(constructionAddress);
+        }
+            writer.close();
+            is.close();
+            socket.close();
+            return product;
 
-        writer.close();
-        is.close();
-        socket.close();
-        return product;
     }
 
     @Override

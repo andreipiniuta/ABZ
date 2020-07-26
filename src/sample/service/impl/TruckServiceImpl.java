@@ -4,10 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.json.JSONWriter;
-import sample.Material;
-import sample.MaterialName;
-import sample.ProviderName;
-import sample.Truck;
+import sample.*;
 import sample.service.TruckService;
 import java.io.IOException;
 import java.io.InputStream;
@@ -93,11 +90,23 @@ public class TruckServiceImpl implements TruckService {
 
 //второй json объект-сам бизнесс объект
         List <Truck> allTruck = new ArrayList<>();
-        JSONArray responseData = response.getJSONArray("response-data");
-        int length = responseData.length();
+        JSONArray responseArray = response.getJSONArray("response-data");//достали массив
+        int length = responseArray.length();
         for (int i = 0; i < length; i++) {
-            Truck truck = (Truck) responseData.get(i);
-            allTruck.add(truck);
+            JSONObject responseObject = responseArray.getJSONObject(i);//при каждом проходе достаем объект из массива
+
+            Integer ID = responseObject.getInt("ID");
+            String truckType = responseObject.getString("truckType");
+            String truckNumber = responseObject.getString("truckNumber");
+            double payload = responseObject.getDouble("payload");
+
+            Truck truck = new Truck();
+            truck.setID(ID);
+            truck.setTruckType(truckType);
+            truck.setTruckNumber(truckNumber);
+            truck.setPayload(payload);
+
+            allTruck.add(truck);//каждый объект закидываю в лист
         }
 
         writer.close();
@@ -121,7 +130,12 @@ public class TruckServiceImpl implements TruckService {
         jsonWriter.object();
         jsonWriter.key("command-name").value("get-truck-by-id");
         jsonWriter.endObject();
-        // второй объекта jsona не нужен
+        // второй объекта jsona отправляем на Server сам ID-шник
+        jsonWriter.key("parameters");
+        jsonWriter.object();
+        jsonWriter.key("ID").value(ID);
+        jsonWriter.endObject();
+
         jsonWriter.endObject();
         writer.flush();
 //получение ответа файла JSON
@@ -139,19 +153,22 @@ public class TruckServiceImpl implements TruckService {
         System.out.println(code + " - " + message);
 
 //второй json объект-сам бизнесс объект
-        JSONObject responseData = response.getJSONObject("response-data");
+        JSONArray responseData = response.getJSONArray("response-data");
         Truck truck = new Truck();
 
-        Integer tID = responseData.getInt("ID");
-        String truckType = responseData.getString("truckType");
-        String truckNumber = responseData.getString("truckNumber");
-        double payload = responseData.getDouble("payload");
+        int size = responseData.length();
+        for (int i = 0; i<size; i++) {
+            JSONObject responseDataObject = responseData.getJSONObject(i);
+            Integer tID = responseDataObject.getInt("ID");
+            String truckType = responseDataObject.getString("truckType");
+            String truckNumber = responseDataObject.getString("truckNumber");
+            double payload = responseDataObject.getDouble("payload");
 
-        truck.setID(tID);
-        truck.setTruckType(truckType);
-        truck.setTruckNumber(truckNumber);
-        truck.setPayload(payload);
-
+            truck.setID(tID);
+            truck.setTruckType(truckType);
+            truck.setTruckNumber(truckNumber);
+            truck.setPayload(payload);
+        }
         writer.close();
         is.close();
         socket.close();

@@ -5,15 +5,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import sample.service.MaterialService;
 import sample.service.ProductService;
 import sample.service.ServiceFactory;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
-
-import static java.lang.Integer.parseInt;
 
 public class showProductController implements Initializable {
 
@@ -30,7 +28,10 @@ public class showProductController implements Initializable {
         items.clear();
         ServiceFactory sf = ServiceFactory.getServiceFactory();
         ProductService ps = sf.getProductService();
-        items.add((Product) ps.getAllProduct());
+        List<Product> allProduct = ps.getAllProduct();
+        for (Product product:allProduct) {
+            items.add(product);
+        }
     }
 
     public void showProductByID () throws IOException {

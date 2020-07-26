@@ -93,11 +93,25 @@ public class StaffServiceImpl implements StaffService {
 
 //второй json объект-сам бизнесс объект
         List <Staff> allStaff = new ArrayList<>();
-        JSONArray responseData = response.getJSONArray("response-data");
-        int length = responseData.length();
+        JSONArray responseArray = response.getJSONArray("response-data");//достали массив
+        int length = responseArray.length();
         for (int i = 0; i < length; i++) {
-            Staff staff = (Staff) responseData.get(i);
-            allStaff.add(staff);
+            JSONObject responseObject = responseArray.getJSONObject(i);//при каждом проходе достаем объект из массива
+
+            Integer ID = responseObject.getInt("ID");
+            String name = responseObject.getString("name");
+            String surname = responseObject.getString("surname");
+            String position = responseObject.getString("position");
+            double salary = responseObject.getDouble("salary");
+
+            Staff staff = new Staff();
+            staff.setID(ID);
+            staff.setName(name);
+            staff.setSurname(surname);
+            staff.setPosition(position);
+            staff.setSalary(salary);
+
+            allStaff.add(staff);//каждый объект закидываю в лист
         }
 
         writer.close();
@@ -121,7 +135,12 @@ public class StaffServiceImpl implements StaffService {
         jsonWriter.object();
         jsonWriter.key("command-name").value("get-staff-by-id");
         jsonWriter.endObject();
-        // второй объекта jsona не нужен
+        // второй объекта jsona отправляем на Server сам ID-шник
+        jsonWriter.key("parameters");
+        jsonWriter.object();
+        jsonWriter.key("ID").value(ID);
+        jsonWriter.endObject();
+
         jsonWriter.endObject();
         writer.flush();
 //получение ответа файла JSON
@@ -139,21 +158,25 @@ public class StaffServiceImpl implements StaffService {
         System.out.println(code + " - " + message);
 
 //второй json объект-сам бизнесс объект
-        JSONObject responseData = response.getJSONObject("response-data");
+        JSONArray responseData = response.getJSONArray("response-data");
         Staff staff = new Staff();
 
-        Integer sID = responseData.getInt("ID");
-        String name = responseData.getString("name");
-        String surname = responseData.getString("surname");
-        String position = responseData.getString("position");
-        double salary = responseData.getDouble("salary");
+        int size = responseData.length();
+        for (int i = 0; i<size; i++) {
+            JSONObject responseDataObject = responseData.getJSONObject(i);
 
-        staff.setID(sID);
-        staff.setName(name);
-        staff.setSurname(surname);
-        staff.setPosition(position);
-        staff.setSalary(salary);
+            Integer sID = responseDataObject.getInt("ID");
+            String name = responseDataObject.getString("name");
+            String surname = responseDataObject.getString("surname");
+            String position = responseDataObject.getString("position");
+            double salary = responseDataObject.getDouble("salary");
 
+            staff.setID(sID);
+            staff.setName(name);
+            staff.setSurname(surname);
+            staff.setPosition(position);
+            staff.setSalary(salary);
+        }
         writer.close();
         is.close();
         socket.close();

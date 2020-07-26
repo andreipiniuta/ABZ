@@ -5,16 +5,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import sample.service.MaterialService;
 import sample.service.RecipeService;
 import sample.service.ServiceFactory;
 
-
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
-
-import static java.lang.Integer.parseInt;
 
 public class showRecipeController implements Initializable {
     @FXML
@@ -29,7 +26,10 @@ public class showRecipeController implements Initializable {
         items.clear();
         ServiceFactory sf = ServiceFactory.getServiceFactory();
         RecipeService rs = sf.getRecipeService();
-        items.add((Recipe)rs.getAllRecipe());
+        List<Recipe> allRecipe = rs.getAllRecipe();
+        for (Recipe recipe : allRecipe) {
+            items.add(recipe);
+        }
     }
 
     public void showRecipeByID() throws IOException {

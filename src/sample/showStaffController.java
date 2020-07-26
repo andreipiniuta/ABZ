@@ -5,12 +5,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import sample.service.RecipeService;
 import sample.service.ServiceFactory;
 import sample.service.StaffService;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class showStaffController implements Initializable {
@@ -28,7 +28,10 @@ public class showStaffController implements Initializable {
         items.clear();
         ServiceFactory sf = ServiceFactory.getServiceFactory();
         StaffService ss = sf.getStaffService();
-        items.add((Staff) ss.getAllStaff());
+        List<Staff> allStaff = ss.getAllStaff();
+        for (Staff staff:allStaff) {
+            items.add(staff);
+        }
 
     }
 

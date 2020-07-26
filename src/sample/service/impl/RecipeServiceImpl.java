@@ -93,11 +93,25 @@ public class RecipeServiceImpl implements RecipeService {
 
 //второй json объект-сам бизнесс объект
         List <Recipe> allRecipe = new ArrayList<>();
-        JSONArray responseData = response.getJSONArray("response-data");
-        int length = responseData.length();
+        JSONArray responseArray = response.getJSONArray("response-data");//достали массив
+        int length = responseArray.length();
         for (int i = 0; i < length; i++) {
-            Recipe recipe = (Recipe) responseData.get(i);
-            allRecipe.add(recipe);
+            JSONObject responseObject = responseArray.getJSONObject(i);//при каждом проходе достаем объект из массива
+
+            Integer ID = responseObject.getInt("ID");
+            String productName = responseObject.getString("productName");
+            double sandPercent = responseObject.getDouble("sandPercent");
+            double gravelPercent = responseObject.getDouble("gravelPercent");
+            double bitumPercent = responseObject.getDouble("bitumPercent");
+
+            Recipe recipe = new Recipe();
+            recipe.setID(ID);
+            recipe.setProductName(productName);
+            recipe.setSandPercent(sandPercent);
+            recipe.setGravelPercent(gravelPercent);
+            recipe.setBitumPercent(bitumPercent);
+
+            allRecipe.add(recipe);//каждый объект закидываю в лист
         }
 
         writer.close();
@@ -121,7 +135,12 @@ public class RecipeServiceImpl implements RecipeService {
         jsonWriter.object();
         jsonWriter.key("command-name").value("get-recipe-by-id");
         jsonWriter.endObject();
-        // второй объекта jsona не нужен
+        // второй объекта jsona отправляем на Server сам ID-шник
+        jsonWriter.key("parameters");
+        jsonWriter.object();
+        jsonWriter.key("ID").value(ID);
+        jsonWriter.endObject();
+
         jsonWriter.endObject();
         writer.flush();
 //получение ответа файла JSON
@@ -139,21 +158,25 @@ public class RecipeServiceImpl implements RecipeService {
         System.out.println(code + " - " + message);
 
 //второй json объект-сам бизнесс объект
-        JSONObject responseData = response.getJSONObject("response-data");
+        JSONArray responseData = response.getJSONArray("response-data");
         Recipe recipe = new Recipe();
 
-        Integer rID = responseData.getInt("ID");
-        String productName = responseData.getString("productName");
-        double sandPercent = responseData.getDouble("sandPercent");
-        double gravelPercent = responseData.getDouble("gravelPercent");
-        double bitumPercent = responseData.getDouble("bitumPercent");
+        int size = responseData.length();
+        for (int i = 0; i<size; i++) {
+        JSONObject responseDataObject = responseData.getJSONObject(i);
 
-        recipe.setID(rID);
-        recipe.setProductName(productName);
-        recipe.setSandPercent(sandPercent);
-        recipe.setGravelPercent(gravelPercent);
-        recipe.setBitumPercent(bitumPercent);
+            Integer rID = responseDataObject.getInt("ID");
+            String productName = responseDataObject.getString("productName");
+            double sandPercent = responseDataObject.getDouble("sandPercent");
+            double gravelPercent = responseDataObject.getDouble("gravelPercent");
+            double bitumPercent = responseDataObject.getDouble("bitumPercent");
 
+            recipe.setID(rID);
+            recipe.setProductName(productName);
+            recipe.setSandPercent(sandPercent);
+            recipe.setGravelPercent(gravelPercent);
+            recipe.setBitumPercent(bitumPercent);
+        }
         writer.close();
         is.close();
         socket.close();

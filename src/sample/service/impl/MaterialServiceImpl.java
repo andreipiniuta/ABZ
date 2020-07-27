@@ -42,7 +42,9 @@ public class MaterialServiceImpl implements MaterialService {
         // ключи--"назв полей", значение----значения полей
         jsonWriter.key("parameters");
         jsonWriter.object();
-        jsonWriter.key("ID").value(material.getID());
+        if (material.getID() != null) {
+            jsonWriter.key("ID").value(material.getID());
+        }
         jsonWriter.key("materialName").value(material.getMaterialName());
         jsonWriter.key("providerName").value(material.getProviderName());
         jsonWriter.key("amount").value(material.getAmount());

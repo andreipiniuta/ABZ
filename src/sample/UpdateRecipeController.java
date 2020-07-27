@@ -4,13 +4,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
-import sample.service.MaterialService;
 import sample.service.RecipeService;
 import sample.service.ServiceFactory;
 
 import java.io.IOException;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 public class UpdateRecipeController {
 
@@ -40,6 +38,7 @@ public class UpdateRecipeController {
         recipe.setID(ID);
         recipe.setProductName(productName);
         recipe.setSandPercent(sandPercent);
+        recipe.setGravelPercent(gravelPercent);
         recipe.setBitumPercent(bitumPercent);
         System.out.println(recipe);
 

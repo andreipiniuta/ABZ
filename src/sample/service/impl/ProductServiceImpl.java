@@ -35,7 +35,9 @@ public class ProductServiceImpl implements ProductService {
         //второй объект json-a----бизнес объект
         jsonWriter.key("parameters");
         jsonWriter.object();
-        jsonWriter.key("ID").value(product.getID());
+        if (product.getID() != null) {
+            jsonWriter.key("ID").value(product.getID());
+        }
         jsonWriter.key("productName").value(product.getProductName());
         jsonWriter.key("productAmount").value(product.getProductAmount());
         jsonWriter.key("constructionAddress").value(product.getConstructionAddress());

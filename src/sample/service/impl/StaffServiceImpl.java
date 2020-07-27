@@ -35,7 +35,9 @@ public class StaffServiceImpl implements StaffService {
         //второй объект json-a----бизнес объект
         jsonWriter.key("parameters");
         jsonWriter.object();
-        jsonWriter.key("ID").value(staff.getID());
+        if (staff.getID() != null) {
+            jsonWriter.key("ID").value(staff.getID());
+        }
         jsonWriter.key("name").value(staff.getName());
         jsonWriter.key("surname").value(staff.getSurname());
         jsonWriter.key("position").value(staff.getPosition());

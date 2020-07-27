@@ -35,7 +35,9 @@ public class TruckServiceImpl implements TruckService {
 //сам объект
         jsonWriter.key("parameters");
         jsonWriter.object();
-        jsonWriter.key("ID").value(truck.getID());
+        if (truck.getID() != null) {
+            jsonWriter.key("ID").value(truck.getID());
+        }
         jsonWriter.key("truckType").value(truck.getTruckType());
         jsonWriter.key("truckNumber").value(truck.getTruckNumber());
         jsonWriter.key("payload").value(truck.getPayload());

@@ -35,7 +35,9 @@ public class RecipeServiceImpl implements RecipeService {
         //второй объект json-a----бизнес объект
         jsonWriter.key("parameters");
         jsonWriter.object();
-        jsonWriter.key("ID").value(recipe.getID());
+        if (recipe.getID() != null) {
+            jsonWriter.key("ID").value(recipe.getID());
+        }
         jsonWriter.key("productName").value(recipe.getProductName());
         jsonWriter.key("sandPercent").value(recipe.getSandPercent());
         jsonWriter.key("gravelPercent").value(recipe.getGravelPercent());
